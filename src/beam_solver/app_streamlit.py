@@ -244,6 +244,10 @@ def _render_sidebar():
         st.session_state.preset_applied = "— select a preset —"
         st.rerun()
 
+    st.sidebar.divider()
+    if st.sidebar.button("Quit", use_container_width=True, type="primary"):
+        st.stop()
+
 
 # ── Main area ──────────────────────────────────────────────────────────────────
 
