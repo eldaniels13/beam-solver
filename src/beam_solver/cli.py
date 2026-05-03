@@ -1,7 +1,7 @@
-"""Command-line interface for beam_solver (Phase 3 — placeholder)."""
+"""Command-line interface for beam_solver."""
 
 
 def main():
-    """Interactive CLI entry point. To be implemented in Phase 3."""
-    print("beam_solver CLI — coming soon")
-    print("For now, use main.py or create scripts with the API directly.")
+    """Dispatch to __main__.main (supports --interactive and --streamlit flags)."""
+    from beam_solver.__main__ import main as _main
+    _main()
