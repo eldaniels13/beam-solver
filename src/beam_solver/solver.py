@@ -74,17 +74,40 @@ def solve_reactions(beam: Beam) -> Reactions:
     # ΣFx = 0  →  Ax = 0 (no horizontal loads)
     r_ax = 0.0
 
-    # Build step-by-step LaTeX equations
+    # Build step-by-step LaTeX equations with per-load terms
+    # ΣM_A terms: each load × its moment arm from A
+    moment_terms: list[str] = []
+    for load in beam.point_loads:
+        d = load.position - a_pos
+        moment_terms.append(rf"{load.magnitude:.2f}({d:.2f})")
+    for load in beam.distributed_loads:
+        f_r = load.resultant_force
+        d = load.resultant_position - a_pos
+        moment_terms.append(rf"{f_r:.2f}({d:.2f})")
+    moment_lhs = r" + ".join(moment_terms) if moment_terms else "0"
+
+    # ΣFy terms: each applied load magnitude
+    fy_terms: list[str] = []
+    for load in beam.point_loads:
+        fy_terms.append(rf"{load.magnitude:.2f}")
+    for load in beam.distributed_loads:
+        fy_terms.append(rf"{load.resultant_force:.2f}")
+    fy_sum = r" + ".join(fy_terms) if fy_terms else "0"
+
     equations = [
         r"$\sum F_x = 0 \;\Rightarrow\; A_x = 0$",
         (
-            rf"$\sum M_A = 0 \;\Rightarrow\; "
-            rf"B_y \cdot {lever_ab:.2f} = {total_ma:.2f}$"
+            rf"$\sum M_A = 0 \;\Rightarrow\; {moment_lhs} = B_y \cdot {lever_ab:.2f}$"
         ),
-        rf"$B_y = \frac{{{total_ma:.2f}}}{{{lever_ab:.2f}}} = {r_by:.2f} \;\mathrm{{kN}}$",
         (
-            rf"$\sum F_y = 0 \;\Rightarrow\; "
-            rf"A_y = {total_fy:.2f} - {r_by:.2f} = {r_ay:.2f} \;\mathrm{{kN}}$"
+            rf"$B_y = \frac{{{total_ma:.2f}}}{{{lever_ab:.2f}}} = {r_by:.2f}"
+            rf" \;\mathrm{{kN}}$"
+        ),
+        (
+            rf"$\sum F_y = 0 \;\Rightarrow\; A_y + B_y = {fy_sum}$"
+        ),
+        (
+            rf"$A_y = {total_fy:.2f} - {r_by:.2f} = {r_ay:.2f} \;\mathrm{{kN}}$"
         ),
     ]
 

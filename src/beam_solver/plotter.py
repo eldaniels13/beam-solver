@@ -4,7 +4,6 @@ Generates a figure with 3 subplots:
     1. Beam schematic (supports, loads, dimensions)
     2. Shear force diagram V(x)
     3. Bending moment diagram M(x)
-Plus a text area showing equilibrium equations with LaTeX rendering.
 """
 
 import numpy as np
@@ -25,18 +24,16 @@ def plot_beam_analysis(
     save_path: str | None = None,
 ) -> plt.Figure:
     """Create the full beam analysis figure."""
-    fig = plt.figure(figsize=(14, 10))
+    fig = plt.figure(figsize=(12, 10))
     fig.suptitle(title, fontsize=14, fontweight="bold")
 
-    gs = GridSpec(3, 2, figure=fig, width_ratios=[3, 1], hspace=0.35, wspace=0.3)
+    gs = GridSpec(3, 1, figure=fig, hspace=0.35)
 
-    ax_beam = fig.add_subplot(gs[0, 0])
-    ax_eq = fig.add_subplot(gs[0, 1])
-    ax_shear = fig.add_subplot(gs[1, :])
-    ax_moment = fig.add_subplot(gs[2, :])
+    ax_beam = fig.add_subplot(gs[0])
+    ax_shear = fig.add_subplot(gs[1])
+    ax_moment = fig.add_subplot(gs[2])
 
     _draw_beam(ax_beam, beam, reactions)
-    _draw_equations(ax_eq, reactions)
     _draw_shear(ax_shear, diagrams)
     _draw_moment(ax_moment, diagrams)
 
@@ -204,20 +201,6 @@ def _draw_reaction(ax, x, value, label, L):
     ax.text(x, y_base - L * 0.03,
             f"${label} = {value:.2f}$ kN",
             ha="center", va="top", fontsize=9, color="blue", fontweight="bold")
-
-
-def _draw_equations(ax: plt.Axes, reactions: Reactions):
-    """Render the equilibrium equations using LaTeX."""
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-    ax.axis("off")
-    ax.set_title("Equilibrium", fontsize=11)
-
-    n = len(reactions.equations)
-    for i, eq in enumerate(reactions.equations):
-        y = 0.85 - i * (0.7 / max(n - 1, 1))
-        ax.text(0.05, y, eq, fontsize=10, va="center",
-                transform=ax.transAxes)
 
 
 def _draw_shear(ax: plt.Axes, data: DiagramData):

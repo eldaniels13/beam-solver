@@ -48,7 +48,7 @@ def main():
         )
 
     else:
-        from .cli import main as cli_main
+        from .cli import main as cli_main  # terminal interactive mode
         cli_main()
 
 

@@ -12,9 +12,14 @@ matplotlib.use("Agg")  # non-interactive backend — must come before pyplot imp
 import matplotlib.pyplot as plt
 import streamlit as st
 
-from .model import Beam, PointLoad, DistributedLoad, Support
-from .solver import solve_reactions, compute_diagrams
-from .plotter import plot_beam_analysis
+try:
+    from .model import Beam, PointLoad, DistributedLoad, Support
+    from .solver import solve_reactions, compute_diagrams
+    from .plotter import plot_beam_analysis
+except ImportError:
+    from beam_solver.model import Beam, PointLoad, DistributedLoad, Support  # noqa: E402
+    from beam_solver.solver import solve_reactions, compute_diagrams  # noqa: E402
+    from beam_solver.plotter import plot_beam_analysis  # noqa: E402
 
 # ── Preset examples ────────────────────────────────────────────────────────────
 
@@ -161,7 +166,7 @@ def _render_sidebar():
                 help="Positive = downward",
             )
             pl["position"] = cols[1].number_input(
-                "x (m)", value=float(pl["position"]),
+                "x (m)", value=float(min(pl["position"], L)),
                 min_value=0.0, max_value=float(L),
                 step=0.5, key=f"pl_pos_{pl['id']}",
             )
@@ -203,12 +208,12 @@ def _render_sidebar():
             )
             c3, c4 = st.columns(2)
             dl["start"] = c3.number_input(
-                "x₁ (m)", value=float(dl["start"]),
+                "x₁ (m)", value=float(min(dl["start"], L)),
                 min_value=0.0, max_value=float(L),
                 step=0.5, key=f"dl_s_{dl['id']}",
             )
             dl["end"] = c4.number_input(
-                "x₂ (m)", value=float(dl["end"]),
+                "x₂ (m)", value=float(min(dl["end"], L)),
                 min_value=0.0, max_value=float(L),
                 step=0.5, key=f"dl_e_{dl['id']}",
             )
@@ -283,9 +288,9 @@ def _render_main(beam: Beam):
 
     # ── Equilibrium equations ──
     if reactions.equations:
-        with st.expander("Equilibrium equations", expanded=False):
-            for eq in reactions.equations:
-                st.latex(eq)
+        st.subheader("Equilibrium Equations")
+        for eq in reactions.equations:
+            st.latex(eq.strip("$"))
 
 
 # ── App entry point ────────────────────────────────────────────────────────────
