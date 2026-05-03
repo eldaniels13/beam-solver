@@ -1,53 +1,85 @@
 # Beam Solver
 
-A Python tool for calculating reactions, shear force, and bending moment in statically determinate horizontal beams.
+A Python tool for analyzing statically determinate beams — reactions, shear force diagrams, and bending moment diagrams with visual output.
 
-Originally developed as an academic project (ITESO, 2022) to automate what would otherwise be tedious manual equilibrium calculations. Now being expanded into a full engineering utility with GUI and visualization.
+Originally developed as an academic project (ITESO, 2022). Now rewritten as a modular, portfolio-grade engineering utility with matplotlib visualization and step-by-step equation display.
 
-## Current features
-
-- Point (concentrated) loads
-- Distributed loads: uniform, triangular, trapezoidal
-- Support configurations: pinned-roller (ends or offset), fixed-end
-- Reaction calculation via equilibrium equations (ΣF=0, ΣM=0)
-- Shear force and bending moment diagram output (matplotlib)
-
-## Roadmap
-
-- [ ] Merge `beam_v1` and `beam_v2` into unified `beam_solver.py`
-- [ ] Streamlit GUI — load input, beam visualization, V and M diagrams side by side
-- [ ] JSON/YAML input file support (non-interactive mode)
-- [ ] Multiple load types in a single run with a visual beam diagram showing applied loads
-- [ ] Moment loads (couples)
-- [ ] Statically indeterminate beams (requires stiffness method or scipy)
-- [ ] Export results to PDF report
-- [ ] Bilingual UI (ES/EN)
-- [ ] Learning mode: step-by-step solution walkthrough with theory notes
-
-## Usage (current — interactive CLI)
-
-```bash
-python beam_v2_original.py
-```
-
-Inputs are entered interactively. Units: kN and meters.
-
-## Project structure
+## Project Structure
 
 ```
 beam-solver/
-├── beam_v1_original.py     # first version — point + distributed loads
-├── beam_v2_original.py     # second version — adds distributed load decomposition
-├── requirements.txt
-└── README.md
+├── src/
+│   └── beam_solver/           # v3 core package
+│       ├── __init__.py
+│       ├── model.py           # dataclasses: Beam, Load, Support
+│       ├── solver.py          # equilibrium solver, V(x), M(x)
+│       ├── plotter.py         # matplotlib: beam schematic + V/M diagrams
+│       └── cli.py             # terminal interface (Phase 3)
+├── tests/
+│   └── test_solver.py         # unit tests
+├── archive/                   # original scripts — project history
+│   ├── beam_v1_original.py    # first version — basic point + distributed
+│   ├── beam_v2_original.py    # second version — trapezoidal decomposition
+│   ├── BeamInF.ipynb          # Jupyter notebook with LaTeX equations
+│   ├── BeamVyD.txt            # original "Libro de Newton" source
+│   ├── Prueba.py              # early verificador test
+│   └── fotos_y_videos/        # screenshots and demo recordings
+├── main.py                    # entry point: python main.py
+├── pyproject.toml             # project config and dependencies
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
-## Background
+## Features
 
-Written by J. Daniel Garcia Castro as part of structural mechanics coursework. The solver decomposes trapezoidal distributed loads into triangle + rectangle resultants, which is the standard approach taught in statics courses.
+- Point (concentrated) loads
+- Distributed loads: uniform, triangular, trapezoidal
+- Support configurations: pin + roller (at ends or offset)
+- Reaction calculation via equilibrium (ΣFx=0, ΣFy=0, ΣM=0)
+- Shear force and bending moment diagrams (matplotlib)
+- Visual beam schematic with supports, load arrows, and reaction arrows
+- LaTeX-rendered equilibrium equations on the plot
+- Input validation (fixed `verificador` from v2)
+
+## Usage
+
+```bash
+python main.py
+```
+
+Runs three example beams. Close each plot window to see the next.
 
 ## Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install numpy matplotlib
 ```
+
+Or with pyproject.toml:
+
+```bash
+pip install .
+```
+
+## Roadmap
+
+- [x] Modular package structure (model / solver / plotter)
+- [x] Point loads + simply supported beams
+- [x] Distributed loads (uniform, triangular, trapezoidal)
+- [x] Visual beam schematic with supports and load arrows
+- [x] LaTeX equation display on plots
+- [x] Input validation (verificador v3)
+- [ ] Interactive CLI — terminal-based beam input
+- [ ] Moment loads (couples)
+- [ ] Cantilever and overhang support configurations
+- [ ] PNG/PDF export
+- [ ] JSON/YAML input files (non-interactive mode)
+- [ ] Streamlit or tkinter GUI
+- [ ] Statically indeterminate beams (stiffness method)
+- [ ] Learning mode: step-by-step walkthrough with theory notes
+- [ ] Bilingual UI (ES/EN)
+
+## Background
+
+Written by J. Daniel Garcia Castro. The solver decomposes trapezoidal distributed loads into equivalent resultants using the standard approach taught in statics/structural mechanics courses.

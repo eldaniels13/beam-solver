@@ -1,6 +1,0 @@
-numpy
-matplotlib
-# Future additions:
-# streamlit        # for web GUI
-# scipy            # for more complex solving (redundant structures)
-# sympy            # for symbolic math / analytical solutions

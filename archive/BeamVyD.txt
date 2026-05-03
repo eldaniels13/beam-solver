@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar 21 16:07:07 2022
+
+@author: Libro de Newton
+"""
+import numpy as np 
+####Importamos la librería en la primera linea
+####y lo ejecutamos al menos una vez
+
+#Ingresamos los datos iniciales (verificamos que sean unidades consistentes)
+l=5 #longitud viga, m
+q=30 #valor de la carga uniformemente distribuida, kN/m
+
+x=np.linspace(0,l,50) #creamos la cordenada x desde 0 a l
+                        # n,valores a los que aplicaremos las ecuaciones M y V
+M=q/2 * (l*x - x**2)    #Ecuación de momento flector
+V=q *(l/2 - x)          #Ecuación de fuerza cortante
+
+from matplotlib import pyplot as plt    #Importamos la librería
+
+#Ploteamos una líniea horizontal que regresente la longitud de la viga
+plt.plot([0]*len(x),color='k')           #Ploteamos x,axis para visualizar la línea
+
+#Ploteamos el momento flector
+plt.plot(-M)  
+#Ploteamos la fueza cortante          
+plt.plot(V) 
+
+
