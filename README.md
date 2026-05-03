@@ -61,14 +61,16 @@ Or with pyproject.toml:
 ```bash
 pip install .
 ```
-
+eldaniels ~                                                                                                        17:42:52
+❯ yay -Syu input-remapper
 ## Roadmap
 
 - [x] Modular package structure (model / solver / plotter)
 - [x] Point loads + simply supported beams
 - [x] Distributed loads (uniform, triangular, trapezoidal)
 - [x] Visual beam schematic with supports and load arrows
-- [x] LaTeX equation display on plots
+- [x] LaTeX equation display on plotseldaniels ~                                                                                                        17:42:52
+❯ yay -Syu input-remapper
 - [x] Input validation (verificador v3)
 - [ ] Interactive CLI — terminal-based beam input
 - [ ] Moment loads (couples)
